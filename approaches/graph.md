@@ -4,223 +4,257 @@
 - **Adjacency List**: `Map<Int, List<Int>>` — sparse graphs (most FAANG problems)
 - **Adjacency Matrix**: `Array<IntArray>` — dense graphs
 - **Grid**: 2D array where cells are nodes, edges are adjacent cells
+- **Edge List**: `List<Triple<Int,Int,Int>>` — (from, to, weight) for weighted graphs
 
 ---
 
-## Pattern 1: DFS (Depth-First Search)
+## 1. DFS / BFS (Basic Traversal)
 
-### When to Use
-- Connected components
-- Detect cycle
-- Find path between nodes
-- Island counting
-- Topological sort
+### DFS Use Cases
+- Connected components, cycle detection, path existence, topological sort
 
-### Pseudocode: DFS on Graph
+### BFS Use Cases
+- **Shortest path in unweighted graph**, level-order, spread simulation
+
+### Pseudocode: Grid DFS (Islands)
 ```
-visited = empty set
-
-FUNCTION dfs(node):
-    IF node in visited: RETURN
-    visited.add(node)
-    
-    PROCESS(node)    // business logic here
-    
-    FOR neighbor in graph[node]:
-        dfs(neighbor)
-```
-
-### Pseudocode: DFS Iterative
-```
-stack = [start]
-visited = empty set
-
-WHILE stack not empty:
-    node = stack.pop()
-    
-    IF node in visited: CONTINUE
-    visited.add(node)
-    
-    PROCESS(node)
-    
-    FOR neighbor in graph[node]:
-        IF neighbor not in visited:
-            stack.push(neighbor)
-```
-
-### Pseudocode: Islands (Grid DFS)
-```
-count = 0
-
-FOR each cell (r, c) in grid:
-    IF grid[r][c] == '1' AND not visited:
-        dfs(r, c)    // marks entire island as visited
-        count++
-
 FUNCTION dfs(r, c):
     IF out of bounds OR visited OR water: RETURN
-    
     MARK visited
-    dfs(r+1, c), dfs(r-1, c)    // down, up
-    dfs(r, c+1), dfs(r, c-1)    // right, left
+    dfs(r+1,c), dfs(r-1,c), dfs(r,c+1), dfs(r,c-1)
+
+FOR each cell:
+    IF unvisited land: dfs(cell); count++
 ```
-
----
-
-## Pattern 2: BFS (Breadth-First Search)
-
-### When to Use
-- **Shortest path** in unweighted graph
-- Level-by-level processing
-- Find minimum steps
-- Rotten oranges / spreading
 
 ### Pseudocode: BFS Shortest Path
 ```
-queue = [start]
-visited = {start}
-distance = 0
-
+queue = [start], visited = {start}, dist = 0
 WHILE queue not empty:
-    size = queue.size    // current level
-    
-    FOR i = 0 to size - 1:
-        node = queue.dequeue()
-        
-        IF node == target: RETURN distance
-        
-        FOR neighbor in graph[node]:
-            IF neighbor not visited:
-                visited.add(neighbor)
-                queue.enqueue(neighbor)
-    
-    distance++
-
-RETURN -1   // not reachable
+    FOR each node at current level:
+        IF node == target: RETURN dist
+        ADD unvisited neighbors to queue
+    dist++
 ```
 
 ---
 
-## Pattern 3: Topological Sort (DAG)
+## 2. Shortest Path
 
-### When to Use
-- Course scheduling (prerequisites)
-- Build order / dependency resolution
-- Detect cycle in directed graph
+### Dijkstra (Single Source, Non-Negative Weights)
+**Use when:** Find shortest path from one node to all others. Edges have non-negative weights.
 
-### Method A: Kahn's Algorithm (BFS-based)
 ```
-// Step 1: Calculate in-degree for all nodes
-inDegree[node] = count of incoming edges
+dist[source] = 0, dist[others] = ∞
+minHeap = [(0, source)]
 
-// Step 2: Start with nodes of in-degree 0
+WHILE heap not empty:
+    (d, node) = heap.pop()
+    
+    IF d > dist[node]: CONTINUE   // stale entry
+    
+    FOR (neighbor, weight) in graph[node]:
+        newDist = dist[node] + weight
+        IF newDist < dist[neighbor]:
+            dist[neighbor] = newDist
+            heap.push((newDist, neighbor))
+
+RETURN dist
+```
+**Time:** O((V + E) log V), **Space:** O(V)
+
+---
+
+### Bellman-Ford (Single Source, Handles Negative Weights)
+**Use when:** Graph may have negative edge weights. Detects negative cycles.
+
+```
+dist[source] = 0, dist[others] = ∞
+
+REPEAT V-1 times:
+    FOR each edge (u, v, weight):
+        IF dist[u] + weight < dist[v]:
+            dist[v] = dist[u] + weight
+
+// Check for negative cycle (V-th pass)
+FOR each edge (u, v, weight):
+    IF dist[u] + weight < dist[v]:
+        RETURN "negative cycle exists"
+```
+**Time:** O(V * E), **Space:** O(V)
+
+---
+
+### Floyd-Warshall (All Pairs Shortest Path)
+**Use when:** Need shortest path between ALL pairs of nodes.
+
+```
+dist[i][j] = direct edge weight (or ∞ if no edge)
+dist[i][i] = 0
+
+FOR k = 0 to V-1:     // intermediate node
+    FOR i = 0 to V-1:
+        FOR j = 0 to V-1:
+            dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+```
+**Time:** O(V³), **Space:** O(V²)
+
+---
+
+## 3. Topological Sort
+
+**Use when:** Dependencies / ordering with no cycles (DAG).
+
+### Kahn's Algorithm (BFS)
+```
+inDegree[node] = count of incoming edges
 queue = all nodes with inDegree == 0
 
 order = []
 WHILE queue not empty:
     node = queue.dequeue()
     order.add(node)
-    
-    FOR neighbor in graph[node]:
-        inDegree[neighbor]--
-        IF inDegree[neighbor] == 0:
-            queue.enqueue(neighbor)
+    FOR neighbor: if --inDegree[neighbor] == 0: queue.add(neighbor)
 
-IF order.size == total nodes: RETURN order    // valid topological order
-ELSE: RETURN "cycle exists"
+IF order.size == V: RETURN order   // else: cycle exists
 ```
 
-### Method B: DFS-based
+### DFS-based
 ```
-visited = empty set
-onStack = empty set    // detect back edge (cycle)
-result = []
-
+// Three states: 0=unvisited, 1=in-stack, 2=done
 FUNCTION dfs(node):
-    IF node in onStack: RETURN "cycle"
-    IF node in visited: RETURN
-    
-    onStack.add(node)
-    
-    FOR neighbor in graph[node]:
-        dfs(neighbor)
-    
-    onStack.remove(node)
-    visited.add(node)
-    result.addFirst(node)    // add in reverse post-order
-
-FOR each node: dfs(node)
-RETURN result
+    IF state[node] == 1: RETURN "cycle"
+    IF state[node] == 2: RETURN
+    state[node] = 1
+    FOR neighbor: dfs(neighbor)
+    state[node] = 2
+    result.addFirst(node)
 ```
 
 ---
 
-## Pattern 4: Union-Find (Disjoint Set)
+## 4. Union-Find (Disjoint Set Union)
 
-### When to Use
-- Connected components
-- Cycle detection in undirected graph
-- Minimum spanning tree (Kruskal)
+**Use when:** Grouping / merging components, cycle detection in undirected graph, Kruskal's MST.
 
-### Pseudocode
 ```
-parent = [0, 1, 2, ..., n]    // each node is its own root
-rank = [0, 0, ..., 0]
+parent = [0..n], rank = [0..n]
 
-FUNCTION find(x):
-    IF parent[x] != x:
-        parent[x] = find(parent[x])   // path compression
+FIND(x):                           // with path compression
+    IF parent[x] != x: parent[x] = FIND(parent[x])
     RETURN parent[x]
 
-FUNCTION union(x, y):
-    rootX = find(x)
-    rootY = find(y)
-    
-    IF rootX == rootY: RETURN false    // already connected (cycle!)
-    
-    // Union by rank
-    IF rank[rootX] < rank[rootY]: swap rootX, rootY
-    parent[rootY] = rootX
-    IF rank[rootX] == rank[rootY]: rank[rootX]++
-    
+UNION(x, y):                       // union by rank
+    px, py = FIND(x), FIND(y)
+    IF px == py: RETURN false      // already same component (cycle!)
+    IF rank[px] < rank[py]: swap px, py
+    parent[py] = px
+    IF rank[px] == rank[py]: rank[px]++
     RETURN true
+```
+**Time:** O(α(n)) ≈ O(1) per operation (inverse Ackermann)
+
+---
+
+## 5. Minimum Spanning Tree
+
+### Kruskal's Algorithm
+**Use when:** Connect all nodes with minimum total edge weight.
+
+```
+SORT all edges by weight
+
+uf = UnionFind(V)
+mst_weight = 0, edges_used = 0
+
+FOR each edge (u, v, w) in sorted order:
+    IF uf.union(u, v):          // no cycle
+        mst_weight += w
+        edges_used++
+        IF edges_used == V - 1: BREAK
+
+RETURN mst_weight
+```
+
+### Prim's Algorithm (Greedy + Min-Heap)
+```
+visited = {start}
+minHeap = [(0, start)]    // (cost, node)
+totalCost = 0
+
+WHILE heap not empty AND visited.size < V:
+    (cost, node) = heap.pop()
+    IF node already visited: CONTINUE
+    visited.add(node)
+    totalCost += cost
+    FOR (neighbor, weight) in graph[node]:
+        IF neighbor not visited:
+            heap.push((weight, neighbor))
+
+RETURN totalCost
 ```
 
 ---
 
-## Pattern 5: Multi-Source BFS
+## 6. Strongly Connected Components (SCC)
 
-### When to Use
-- Rotten oranges (spread from multiple sources simultaneously)
-- 01 matrix (distance from nearest 0)
-- Pacific Atlantic water flow
+### Kosaraju's Algorithm
+**Use when:** Find groups of nodes where every node can reach every other node.
 
-### Core Idea: Start BFS from ALL sources simultaneously
 ```
-queue = ALL starting nodes    // add multiple sources
-visited = mark all sources as visited
+// Step 1: DFS on original graph, push to stack in finish order
+// Step 2: Transpose the graph (reverse all edges)
+// Step 3: DFS on transposed graph in reverse finish order
 
-WHILE queue not empty:
-    node = queue.dequeue()
-    FOR neighbor in neighbors(node):
-        IF can reach AND not visited:
-            visited.add(neighbor)
-            queue.enqueue(neighbor)
+EACH DFS from step 3 gives one SCC
+```
+
+### Tarjan's Algorithm (Single DFS)
+```
+// Tracks discovery time and low-link value
+disc[v] = discovery time
+low[v] = lowest disc reachable from subtree of v
+
+IF low[v] == disc[v]: pop stack → one SCC
+```
+
+---
+
+## 7. Bipartite Graph
+
+**Definition:** Can color nodes with 2 colors such that no two adjacent nodes share a color.
+
+```
+color = [-1, -1, ..., -1]
+
+FUNCTION bfs(start):
+    queue = [start], color[start] = 0
+    WHILE queue not empty:
+        node = queue.dequeue()
+        FOR neighbor in graph[node]:
+            IF color[neighbor] == -1:
+                color[neighbor] = 1 - color[node]
+                queue.enqueue(neighbor)
+            ELSE IF color[neighbor] == color[node]:
+                RETURN false    // same color = not bipartite
+    RETURN true
 ```
 
 ---
 
 ## FAANG Frequency Summary
 
-| Problem | Difficulty | Pattern | Asked At |
-|---------|-----------|---------|----------|
-| Number of Islands | Medium | Grid DFS/BFS | All FAANG |
-| Clone Graph | Medium | DFS/BFS | Meta, Amazon |
+| Problem | Difficulty | Algorithm | Asked At |
+|---------|-----------|-----------|----------|
+| Number of Islands | Medium | DFS/BFS | All FAANG |
 | Course Schedule | Medium | Topological Sort | All FAANG |
-| Course Schedule II | Medium | Topological Sort | Google, Amazon |
+| Network Delay Time | Medium | Dijkstra | Google, Amazon |
+| Cheapest Flights Within K Stops | Medium | Bellman-Ford | Amazon, Google |
+| Min Cost to Connect All Points | Medium | Kruskal/Prim (MST) | Google |
+| Redundant Connection | Medium | Union-Find | Amazon |
+| Number of Connected Components | Medium | Union-Find/DFS | Google |
 | Pacific Atlantic Water Flow | Medium | Multi-Source DFS | Google |
-| Max Area of Island | Medium | Grid DFS | Amazon, Google |
-| Rotting Oranges | Medium | Multi-Source BFS | Amazon, Google |
-| Number of Connected Components | Medium | Union-Find/DFS | Google, LinkedIn |
+| Is Graph Bipartite? | Medium | BFS/DFS Coloring | Amazon |
+| Critical Connections (Bridges) | Hard | Tarjan's (SCC) | Amazon |
 | Word Ladder | Hard | BFS | All FAANG |
-| Graph Valid Tree | Medium | Union-Find | LinkedIn |
+| Alien Dictionary | Hard | Topological Sort | Meta, Google |
