@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.LeetCode" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/leetcode_orange</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="android:statusBarColor">@color/leetcode_dark</item>
+        <item name="android:windowBackground">@color/leetcode_dark</item>
+    </style>
+</resources>

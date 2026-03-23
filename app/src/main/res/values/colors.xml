@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="leetcode_orange">#FFFFA116</color>
+    <color name="leetcode_dark">#FF1A1A1A</color>
+    <color name="leetcode_gray">#FF2D2D2D</color>
+    <color name="leetcode_green">#FF2CBB5D</color>
+</resources>
