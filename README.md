@@ -1,6 +1,6 @@
 # LeetCode FAANG Interview Prep — Kotlin
 
-A comprehensive Android project containing high-probability FAANG (Google, Meta, Amazon, Apple, Microsoft) LeetCode solutions in Kotlin, covering all major algorithms and data structures asked in interviews from 2022–2026.
+A comprehensive Android project containing high-probability FAANG (Google, Meta, Amazon, Apple, Microsoft) LeetCode solutions in Kotlin, covering all major algorithms, data structures, and patterns asked in interviews from 2022–2026.
 
 ---
 
@@ -9,9 +9,11 @@ A comprehensive Android project containing high-probability FAANG (Google, Meta,
 - [Project Structure](#project-structure)
 - [Branches](#branches)
 - [Approach Docs](#approach-docs)
+- [Kotlin Utilities](#kotlin-utilities)
 - [How to Run](#how-to-run)
 - [Coding Guidelines](#coding-guidelines)
 - [Problem Count by Branch](#problem-count-by-branch)
+- [Topics Covered](#topics-covered)
 
 ---
 
@@ -19,32 +21,48 @@ A comprehensive Android project containing high-probability FAANG (Google, Meta,
 
 ```
 leetcode/
-├── app/                                  # Android app module (run & demo solutions)
+├── app/                                      # Android app module (run & demo solutions)
 │   └── src/main/java/com/leetcode/app/
-│       └── MainActivity.kt               # Entry point to run solutions
+│       └── MainActivity.kt
 │
-├── solutions/                            # Kotlin library module — all LeetCode code lives here
+├── solutions/                                # Kotlin library module — all algorithm code
 │   └── src/main/java/com/leetcode/solutions/
+│       │
 │       ├── common/
-│       │   ├── ListNode.kt               # Singly linked list node + utilities
-│       │   └── TreeNode.kt               # Binary tree node + utilities
+│       │   ├── ListNode.kt                   # Singly linked list node + utilities
+│       │   └── TreeNode.kt                   # Binary tree node + utilities
 │       │
+│       ├── utils/                            # ← Reusable helper functions (kotlin-utils branch)
+│       │   ├── NumberUtils.kt                # Digits, reverse, palindrome, binary string
+│       │   ├── CharStringUtils.kt            # Char↔index, freq array, anagram, palindrome
+│       │   ├── ArrayUtils.kt                 # Swap, reverse, prefix sum, Dutch flag, binary search
+│       │   ├── GridUtils.kt                  # DIRS_4/8, isValid, getNeighbors, encodeCell
+│       │   ├── BitUtils.kt                   # Count bits, set/clear/toggle, isPowerOf2, subsets
+│       │   ├── MathUtils.kt                  # GCD, LCM, safe mod, fast power, sieve, isPrime
+│       │   ├── GraphUtils.kt                 # Build adj list, UnionFind class, topological sort
+│       │   ├── CollectionUtils.kt            # Frequency map, merge intervals, heap factories
+│       │   └── general/                      # General-purpose conversions (non-algo)
+│       │       ├── BaseConversions.kt        # Any base ↔ Int, Roman numerals, English words
+│       │       ├── TypeConversions.kt        # IntArray↔List, Array↔IntArray, Char↔ASCII, Pair/Triple
+│       │       ├── StringManipUtils.kt       # Reverse words, title case, run-length encode/decode
+│       │       ├── CollectionConversions.kt  # Flatten, zip/unzip, rotate, transpose, set ops
+│       │       └── RangeUtils.kt             # Clamp, isInRange, circularIndex, ceilDiv, overlap
+│       │
+│       ├── arrays/problems/                  # ← arrays branch
 │       ├── linkedlist/
-│       │   ├── traversals/               # BasicTraversals, TwoPointerPatterns, ReversalPatterns
+│       │   ├── traversals/
 │       │   └── problems/easy|medium|hard/
-│       │
 │       ├── tree/
-│       │   ├── traversals/               # DFSTraversals, BFSTraversals, TreeProperties
+│       │   ├── traversals/
 │       │   └── problems/easy|medium|hard/
-│       │
 │       ├── graph/
-│       │   ├── traversals/               # GraphTraversals (DFS, BFS, Topological Sort)
-│       │   ├── shortest_path/            # Dijkstra, Bellman-Ford
-│       │   ├── union_find/               # UnionFind DSU
-│       │   ├── mst/                      # Kruskal, Prim
-│       │   ├── scc/                      # Tarjan SCC, Critical Connections
+│       │   ├── traversals/
+│       │   ├── shortest_path/                # Dijkstra, Bellman-Ford
+│       │   ├── union_find/
+│       │   ├── mst/                          # Kruskal, Prim
+│       │   ├── scc/                          # Tarjan, Critical Connections
 │       │   └── problems/medium|hard/
-│       │
+│       ├── design/problems/                  # ← design branch (LRU, LFU, Min Stack, etc.)
 │       ├── binarysearch/problems/
 │       ├── twopointers/problems/
 │       ├── slidingwindow/problems/
@@ -53,20 +71,21 @@ leetcode/
 │       ├── dp/problems/
 │       ├── backtracking/problems/
 │       ├── trie/
-│       │   ├── core/                     # TrieNode (Array-based & HashMap-based)
+│       │   ├── core/
 │       │   └── problems/
 │       ├── intervals/problems/
 │       ├── bitmanipulation/problems/
 │       ├── greedy/problems/
 │       ├── matrix/problems/
 │       ├── strings/
-│       │   ├── algorithms/               # KMP string matching
+│       │   ├── algorithms/                   # KMP
 │       │   └── problems/
 │       └── math/
-│           ├── algorithms/               # MathUtils: GCD, Fast Power, Sieve
+│           ├── algorithms/
 │           └── problems/
 │
-└── approaches/                           # Plain English algorithm explanations + pseudocode
+└── approaches/                               # Plain English explanations + pseudocode
+    ├── README.md
     ├── linked_list.md
     ├── tree.md
     ├── binary_search.md
@@ -83,39 +102,53 @@ leetcode/
     ├── string.md
     ├── math.md
     ├── dynamic_programming.md
-    └── backtracking.md
+    ├── backtracking.md
+    ├── arrays.md
+    ├── design.md
+    ├── prefix_sum.md          ← NEW
+    ├── hashing.md             ← NEW
+    ├── monotonic_stack_queue.md  ← NEW
+    ├── segment_tree_fenwick.md   ← NEW
+    ├── divide_and_conquer.md  ← NEW
+    ├── recursion.md           ← NEW
+    └── kotlin_utils.md        ← NEW (index to all utils functions)
 ```
 
 ---
 
 ## Branches
 
-Each problem category lives on its own dedicated branch. Switch branches to study a specific topic.
+Each topic lives on its own dedicated Git branch. Switch branches to study a specific area.
 
-| Branch | Topic | Key Algorithms |
+| Branch | Topic | Key Algorithms / Patterns |
 |---|---|---|
-| `linked-list` | Linked Lists | Fast-Slow Pointer, Reversal, Floyd's Cycle Detection, Merge |
-| `tree` | Binary Trees | DFS (Pre/In/Post), BFS Level Order, LCA, BST, Path Sum |
-| `binary-search` | Binary Search | Standard, Rotated Array, Binary Search on Answer, 2D Matrix |
+| `main` | Entry point | README, all approach docs |
+| `arrays` | Arrays | Two Sum, Kadane's, Prefix Sum, Product Except Self, Cyclic Sort |
+| `linked-list` | Linked Lists | Fast-Slow Pointer, Floyd's Cycle, Reversal, Merge, Intersection |
+| `tree` | Binary Trees | DFS (Pre/In/Post), BFS, LCA, BST Validate, Path Sum, Serialize |
+| `binary-search` | Binary Search | Standard, Leftmost/Rightmost, On Answer, Rotated Array, 2D Matrix |
 | `two-pointers` | Two Pointers | Converging, Same Direction, 3Sum, Trapping Rain Water |
-| `sliding-window` | Sliding Window | Fixed Window, Variable Window, Monotonic Deque |
+| `sliding-window` | Sliding Window | Fixed, Variable, Freq Map, Monotonic Deque (Window Max) |
 | `stack` | Stack | Monotonic Stack, Min Stack, Expression Evaluation, Histogram |
-| `heap` | Heap / Priority Queue | Min/Max Heap, Two Heaps, Kth Largest, QuickSelect |
+| `heap` | Heap / Priority Queue | Kth Largest, Top K Frequent, Two Heaps, Merge K Lists |
 | `graph` | Graphs | DFS/BFS, Dijkstra, Bellman-Ford, Kruskal/Prim MST, Union-Find, Tarjan SCC, Bipartite |
 | `trie` | Trie / Prefix Tree | Insert/Search/Prefix, Wildcard DFS, Word Search II |
-| `intervals` | Intervals | Line Sweep, Merge, Insert, Meeting Rooms, Skyline Problem |
-| `bit-manipulation` | Bit Manipulation | XOR tricks, Brian Kernighan, Bit Masking, DP with bitmask |
-| `greedy` | Greedy | Jump Game, Gas Station, Candy, Partition Labels |
-| `matrix` | 2D Matrix | Rotate Image, Spiral Order, Set Zeroes, Search |
-| `string` | Strings | KMP Pattern Matching, Manacher's, Anagram, Group Anagrams |
-| `math` | Math / Number Theory | GCD/LCM, Fast Power, Sieve of Eratosthenes |
-| `dynamic-programming` | Dynamic Programming | 1D DP, 2D DP, Knapsack (0/1 & Unbounded), Interval DP |
-| `backtracking` | Backtracking | Subsets, Permutations, N-Queens, Sudoku, IP Addresses |
+| `intervals` | Intervals | Sort+Merge, Line Sweep, Insert Interval, Meeting Rooms, Skyline |
+| `bit-manipulation` | Bit Manipulation | XOR tricks, Brian Kernighan, Bitmask DP, Subset generation |
+| `greedy` | Greedy | Jump Game, Gas Station, Candy, Partition Labels, Task Scheduler |
+| `matrix` | 2D Matrix | Rotate 90°, Spiral Order, Set Zeroes, Search Sorted Matrix |
+| `string` | Strings | KMP, Manacher's, Anagram, Group Anagrams, Palindrome Partition |
+| `math` | Math / Number Theory | GCD/LCM, Fast Power, Sieve, Digit Manipulation |
+| `dynamic-programming` | Dynamic Programming | 1D DP, 2D DP, Knapsack (0/1 & Unbounded), Interval DP, State Machine DP |
+| `backtracking` | Backtracking | Subsets, Permutations, Combinations, N-Queens, Sudoku, Word Search |
+| `design` | Data Structure Design | LRU Cache, LFU Cache, Min Stack, Randomized Set, Median Finder |
+| `kotlin-utils` | Reusable Utilities | 8 utils files + `general/` subfolder (see below) |
 
 ```bash
-# Switch to a topic branch
-git checkout linked-list
-git checkout graph
+# Switch to any topic branch
+git checkout arrays
+git checkout design
+git checkout kotlin-utils
 git checkout dynamic-programming
 ```
 
@@ -123,15 +156,72 @@ git checkout dynamic-programming
 
 ## Approach Docs
 
-The `approaches/` folder contains plain-English explanations + pseudocode for every major algorithmic pattern — no code, just the thinking.
+The `approaches/` folder has plain-English explanations + pseudocode for every major pattern.
+**Read the approach doc before the code.** This is how FAANG interviews work — explain first, then code.
 
-Each doc includes:
-- **Core idea** explained simply
-- **Pseudocode** for every variant
-- **"Why it works"** explanation for non-obvious algorithms
-- **FAANG Frequency table** showing which companies ask which problems
+Each doc contains:
+- Core idea in simple language
+- Pseudocode for every variant of the pattern
+- "Why it works" for non-obvious algorithms
+- FAANG frequency table (which companies ask which problems)
 
-> Read the approach doc **before** looking at the code solution. This is how real interviews work — you need to explain your approach first.
+| Doc | What it covers |
+|---|---|
+| `linked_list.md` | Fast-Slow, Reversal, Dummy Node, Runner, Two Pointer |
+| `tree.md` | DFS (3 orders), BFS, Return-Value Pattern, BST, LCA, Serialize |
+| `binary_search.md` | 4 templates: Standard, Leftmost, Rightmost, On Answer |
+| `two_pointers.md` | Converging, Same Direction, Three Pointers, Container/Area |
+| `sliding_window.md` | Fixed, Variable (2 variants), HashMap, Monotonic Deque |
+| `stack.md` | Balanced Parens, Monotonic Stack, Min Stack, RPN, Histogram |
+| `heap.md` | Kth Largest, Top K Frequent, Merge K Lists, Two Heaps |
+| `graph.md` | DFS/BFS, Dijkstra, Bellman-Ford, Floyd-Warshall, Topo Sort, Union-Find, MST, SCC, Bipartite |
+| `trie.md` | Node structure, Insert/Search/Prefix, Wildcard DFS, Backtracking |
+| `intervals.md` | Sort+Merge, Line Sweep, Insert Interval, Interval Scheduling |
+| `bit_manipulation.md` | Core ops, Brian Kernighan, XOR tricks, Bitmask, DP with bitmask |
+| `greedy.md` | Interval Scheduling, Jump Game, Gas Station, Candy, PQ Greedy |
+| `matrix.md` | In-Place Rotation, Spiral Traversal, Set Zeroes, Search |
+| `string.md` | KMP (LPS array), Rabin-Karp, Z-Algorithm, Manacher's |
+| `math.md` | GCD/LCM, Fast Power, Sieve, Digit Manipulation, Modular Arithmetic |
+| `dynamic_programming.md` | 3-Step Framework, 1D/2D DP, Knapsack, Interval DP, State Machine |
+| `backtracking.md` | Universal Template, Subsets, Permutations, Grid Backtracking, Pruning |
+| `arrays.md` | Two Sum Pattern, Kadane's, Prefix×Suffix, Cyclic Sort, Next Permutation |
+| `design.md` | LRU/LFU Cache, O(1) Insert+Delete+Random, Two Heaps, Iterator Design |
+| `prefix_sum.md` | Basic Prefix Sum, Prefix+HashMap, 2D Prefix Sum, Equilibrium Index |
+| `hashing.md` | Complement Map, Frequency Map, Group By Key, Running State |
+| `monotonic_stack_queue.md` | Next Greater/Smaller, Prev Greater, Sliding Window Max (Deque) |
+| `segment_tree_fenwick.md` | Fenwick Tree (BIT), Segment Tree, Lazy Propagation, Count Inversions |
+| `divide_and_conquer.md` | Merge Sort, Count Inversions, Quick Sort, QuickSelect, Closest Pair |
+| `recursion.md` | 3-Step Framework, Return-Value Up, Pass-Value Down, Memoization, Tail Recursion |
+| `kotlin_utils.md` | Complete lookup table for all ~100 utility functions with problem references |
+
+---
+
+## Kotlin Utilities
+
+The `kotlin-utils` branch has **~100 reusable helper functions** across 8 focused files + a `general/` subfolder. Import what you need — no need to rewrite boilerplate every problem.
+
+### Algorithm Utils (`utils/`)
+
+| File | Highlights |
+|---|---|
+| `NumberUtils.kt` | `digits()`, `reverseDigits()`, `isPalindromeNumber()`, `toBinaryString()`, `binaryToInt()` |
+| `CharStringUtils.kt` | `toLowercaseIndex()` (`'a'→0`), `charFrequency()` (IntArray[26]), `isAnagramOf()`, `anagramKey()`, `isPalindrome()` |
+| `ArrayUtils.kt` | `swap()`, `reverseRange()`, `toPrefixSum()`, `moveZerosToEnd()`, `dutchNationalFlag()`, `lowerBound()`, `upperBound()` |
+| `GridUtils.kt` | `DIRS_4`, `DIRS_8`, `isValid(r,c,rows,cols)`, `getNeighbors4/8()`, `encodeCell()` |
+| `BitUtils.kt` | `countSetBits()`, `isBitSet/setBit/clearBit/toggleBit()`, `isPowerOfTwo()`, `lowestSetBit()`, `xorUpTo()`, `allSubsets()` |
+| `MathUtils.kt` | `gcd()`, `lcm()`, `safeMod()`, `modPow()`, `fastPow()`, `isPrime()`, `sieve()`, `isPerfectSquare()` |
+| `GraphUtils.kt` | `buildAdjList()`, `buildWeightedAdjList()`, `UnionFind` class, `topologicalSort()` |
+| `CollectionUtils.kt` | `frequencyMap()`, `mergeIntervals()`, `intervalsOverlap()`, `minHeap/maxHeap()`, `minHeapByFirst()` |
+
+### General Conversions (`utils/general/`)
+
+| File | Highlights |
+|---|---|
+| `BaseConversions.kt` | `toBaseString(n)`, `fromBase(n)`, `toHexString()`, `toRoman()`, `romanToInt()`, `toEnglishWords()` |
+| `TypeConversions.kt` | `IntArray↔List<Int>`, `Array<Int>↔IntArray`, `Array<IntArray>↔List<List<Int>>`, `Char↔ASCII`, `Boolean↔Int`, `IntArray→Pair/Triple` |
+| `StringManipUtils.kt` | `reverseWords()`, `titleCase()`, `camelToSnake()`, `firstUniqueCharIndex()`, `runLengthEncode/Decode()`, `keepAlphanumeric()` |
+| `CollectionConversions.kt` | `flatten()`, `zipWith()`, `unzip()`, `rotateLeft/Right()`, `transpose()`, `intersectWith()`, `drainToList()` |
+| `RangeUtils.kt` | `clamp()`, `isInRange()`, `circularIndex()`, `overlapLength()`, `ceilDiv()`, `rangeList()`, `maxOfAll/minOfAll()` |
 
 ---
 
@@ -142,7 +232,8 @@ Each doc includes:
 - JDK 17+
 
 ### Steps
-1. Clone the repository
+
+1. Clone the repository:
    ```bash
    git clone git@github.com:vaibhavtripathi-bit/leetcode_algo.git
    cd leetcode_algo
@@ -154,39 +245,40 @@ Each doc includes:
 
 4. Switch to the branch you want to study:
    ```bash
-   git checkout tree
+   git checkout arrays          # Array fundamentals
+   git checkout graph           # Graph algorithms
+   git checkout design          # LRU Cache, LFU Cache, etc.
+   git checkout kotlin-utils    # Reusable helper functions
    ```
 
-5. Run the app on an emulator or device — the main screen has a "Run Sample" button to test the solutions module is working.
+5. Run the app on an emulator or device to verify the solutions module links correctly.
 
-6. To study solutions: browse `solutions/src/main/java/com/leetcode/solutions/`
+6. Browse solutions at: `solutions/src/main/java/com/leetcode/solutions/`
 
 ---
 
 ## Coding Guidelines
 
-All solutions follow these rules:
-
 ### Readability First
 - Simple, readable code — no overly clever one-liners
-- Modern Kotlin features used **only where they improve clarity** (scope functions, `when`, null safety)
+- Modern Kotlin features used **only where they improve clarity** (`when`, scope functions, null safety operators)
 
 ### Small Focused Functions
-- Every problem is broken into multiple small functions, each doing one thing
+- Every problem broken into multiple small functions, each with a single responsibility
 - No large "wall of code" functions
 
 ### Separated Concerns
-- Traversal logic is separated from business logic (especially for trees, graphs, linked lists)
-- E.g., tree traversal in `traversals/` folder; problem solutions use those utilities
+- Traversal logic separated from business logic for trees, graphs, linked lists
+- E.g., tree traversals live in `traversals/`; problem solutions call them
 
 ### Multiple Solutions Per Problem
 - Every problem has **3–4 solutions** showing different approaches
-- Solutions progress from simpler → more optimized
-- For DP problems: Brute force → Memoization → Tabulation → Space Optimized
+- Solutions progress: simpler → more optimized
+- DP problems: Brute Force → Memoization → Tabulation → Space Optimized
 
 ### High-Probability Questions Only
-- Only FAANG interview questions from 2022–2026
-- Problems marked with which companies ask them
+- FAANG interview questions from 2022–2026 only
+- No "good to know but rarely asked" problems
 
 ---
 
@@ -194,6 +286,7 @@ All solutions follow these rules:
 
 | Branch | Easy | Medium | Hard | Total |
 |---|---|---|---|---|
+| `arrays` | 2 | 5 | 1 | **8** |
 | `linked-list` | 7 | 7 | 2 | **16** |
 | `tree` | 5 | 8 | 2 | **15** |
 | `binary-search` | 2 | 5 | 1 | **8** |
@@ -211,7 +304,8 @@ All solutions follow these rules:
 | `math` | — | 2 | — | **2** |
 | `dynamic-programming` | 1 | 8 | 2 | **11** |
 | `backtracking` | — | 6 | 2 | **8** |
-| **Total** | | | | **~120** |
+| `design` | — | 4 | 2 | **6** |
+| **Total** | | | | **~135** |
 
 ---
 
@@ -221,35 +315,44 @@ All solutions follow these rules:
 - Singly Linked List, Doubly Linked List
 - Binary Tree, Binary Search Tree
 - Graph (Adjacency List, Adjacency Matrix, Grid)
-- Stack, Queue, Deque, Monotonic Stack
-- Heap / Priority Queue, Two-Heap
+- Stack, Queue, Deque, Monotonic Stack, Monotonic Queue
+- Heap / Priority Queue, Two-Heap Pattern
 - Trie (Prefix Tree) — Array-based & HashMap-based
-- Union-Find (Disjoint Set Union)
+- Union-Find (Disjoint Set Union) with path compression + rank
+- Segment Tree (Range Sum/Min/Max + Lazy Propagation)
+- Fenwick Tree (Binary Indexed Tree)
 
 ### Algorithms
 - Binary Search (4 templates including "Binary Search on Answer")
 - BFS, DFS, Multi-Source BFS
-- Dijkstra's Shortest Path
-- Bellman-Ford (Negative Weights)
-- Kruskal's & Prim's MST
-- Tarjan's SCC & Bridge Finding
+- Dijkstra's Shortest Path (non-negative weights)
+- Bellman-Ford (negative weights, K stops)
+- Floyd-Warshall (all-pairs shortest path)
+- Kruskal's & Prim's Minimum Spanning Tree
+- Tarjan's SCC & Bridge / Critical Connection Finding
 - Topological Sort (Kahn's BFS + DFS-based)
 - KMP String Pattern Matching
+- Rabin-Karp Rolling Hash
 - Manacher's Palindrome Algorithm
 - Sieve of Eratosthenes
 - Fast Power (Binary Exponentiation)
 - Floyd's Cycle Detection
-- QuickSelect
+- QuickSelect (Kth Largest in O(n) average)
+- Merge Sort, Quick Sort
 
 ### Patterns
 - Two Pointers, Fast-Slow Pointer
-- Sliding Window (Fixed & Variable)
+- Sliding Window (Fixed & Variable size)
+- Prefix Sum + HashMap
+- Monotonic Stack / Monotonic Queue
 - Line Sweep
 - Backtracking with Pruning
-- Dynamic Programming (1D, 2D, Knapsack, Interval, State Machine)
-- Greedy
+- Dynamic Programming (1D, 2D, Knapsack, Interval, State Machine, Bitmask)
+- Greedy (Interval Scheduling, Exchange Argument)
 - Divide and Conquer
 - Bit Manipulation
+- Union-Find
+- Cyclic Sort
 
 ---
 
